@@ -4,6 +4,7 @@ package com.yunma.nettyplugin.netty;
 import com.google.gson.Gson;
 import com.yunma.nettyplugin.App;
 import com.yunma.nettyplugin.bean.PingBean;
+import com.yunma.nettyplugin.global.Const;
 import com.yunma.nettyplugin.util.Util;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -39,8 +40,8 @@ public class DecoderHandler extends SimpleChannelInboundHandler<Object> {
             if (event.state().equals(IdleState.READER_IDLE)) {
                 System.out.println("长期没收到服务器推送数据");
                 //可以选择重新连接
-                // SClientManager.getInstance().stop();
-                //SClientManager.getInstance().start(Const.BASE_IP, Const.BASE_PORT);
+                 SClientManager.getInstance().stop();
+                SClientManager.getInstance().start(Const.BASE_IP, Const.BASE_PORT);
             } else if (event.state().equals(IdleState.WRITER_IDLE)) {
                 System.out.println("长期未向服务器发送数据");
                 //发送心跳包
