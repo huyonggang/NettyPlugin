@@ -19,7 +19,7 @@ public class SClientInitializer extends ChannelInitializer<SocketChannel> {
         ChannelPipeline pipeline = ch.pipeline();
         ch.pipeline().addLast(new StringEncoder());
         ch.pipeline().addLast(new StringDecoder());
-        pipeline.addLast("ping", new IdleStateHandler(60, 60, 60 * 10, TimeUnit.SECONDS));
+        pipeline.addLast("ping", new IdleStateHandler(60, 60*3, 60 * 10, TimeUnit.SECONDS));
         pipeline.addLast(new DecoderHandler());
     }
 }
