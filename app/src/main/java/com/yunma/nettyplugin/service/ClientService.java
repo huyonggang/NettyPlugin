@@ -76,6 +76,8 @@ public class ClientService extends Service {
                 isAppRunning = true;
                 Log.d("ClientService","status--->"+isAppRunning);
                 break;
+            }else{
+                isAppRunning = false;
             }
         }
 
