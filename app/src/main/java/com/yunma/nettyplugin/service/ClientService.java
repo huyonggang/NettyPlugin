@@ -74,6 +74,8 @@ public class ClientService extends Service {
             if (info.topActivity.getPackageName().equals("com.tianheng.client") && info.baseActivity.getPackageName().equals("com.tianheng.client")) {
                 isAppRunning = true;
                 break;
+            }else{
+                isAppRunning = false;
             }
         }
 
