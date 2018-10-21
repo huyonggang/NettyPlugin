@@ -15,6 +15,7 @@ import com.yunma.nettyplugin.netty.SClientManager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -86,7 +87,12 @@ public class ClientService extends Service {
         //匹配成功
         if (!isAppRunning) {
             startApp();
+            return;
         }
+        if (!isServiceWorked("com.tianheng.client.service.SerialPortService")){
+            startApp();
+        }
+
     }
 
 
@@ -96,6 +102,19 @@ public class ClientService extends Service {
         launchIntent.setFlags(
                 Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
         startActivity(launchIntent);
+    }
+
+
+    //检测service是否在运行
+    public boolean isServiceWorked(String serviceName) {
+        ActivityManager myManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        ArrayList<ActivityManager.RunningServiceInfo> runningService = (ArrayList<ActivityManager.RunningServiceInfo>) myManager.getRunningServices(Integer.MAX_VALUE);
+        for (int i = 0; i < runningService.size(); i++) {
+            if (runningService.get(i).service.getClassName().toString().equals(serviceName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
