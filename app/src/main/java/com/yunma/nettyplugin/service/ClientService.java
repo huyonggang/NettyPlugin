@@ -72,12 +72,16 @@ public class ClientService extends Service {
         List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(100);
         for (ActivityManager.RunningTaskInfo info : list) {
             if (info.topActivity.getPackageName().equals("com.tianheng.client") && info.baseActivity.getPackageName().equals("com.tianheng.client")) {
+
                 isAppRunning = true;
+
                 break;
             }else{
                 isAppRunning = false;
             }
         }
+
+        Log.d("ClientService","status--->"+isAppRunning);
 
         //匹配成功
         if (!isAppRunning) {
