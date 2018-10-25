@@ -22,6 +22,7 @@ public class DecoderHandler extends SimpleChannelInboundHandler<Object> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Object o) throws Exception {
+
         System.out.println("服务器数据"+o);
     }
 
@@ -50,7 +51,7 @@ public class DecoderHandler extends SimpleChannelInboundHandler<Object> {
                 pingBean.setType(0);
                 pingBean.setCabinetNumber(Util.getImei(App.getInstance()));
                 String pingStr = new Gson().toJson(pingBean);
-                ctx.writeAndFlush(pingStr);
+                ctx.writeAndFlush(pingStr+"\n");
             } else if (event.state().equals(IdleState.ALL_IDLE)) {
                 System.out.println("ALL");
             }

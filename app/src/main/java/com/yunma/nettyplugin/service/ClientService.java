@@ -64,11 +64,11 @@ public class ClientService extends Service {
 
     @Subscribe
     public void onEvent(String data) {
-        SClientManager.getInstance().sendFrame(data);
+        SClientManager.getInstance().sendFrame(data + "\n");
     }
 
 
-    public void  isBackground() {
+    public void isBackground() {
         ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(100);
         for (ActivityManager.RunningTaskInfo info : list) {
@@ -77,21 +77,21 @@ public class ClientService extends Service {
                 isAppRunning = true;
 
                 break;
-            }else{
+            } else {
                 isAppRunning = false;
             }
         }
 
-        Log.d("ClientService","status--->"+isAppRunning);
+        Log.d("ClientService", "status--->" + isAppRunning);
 
         //匹配成功
         if (!isAppRunning) {
             startApp();
-            return;
         }
-        if (!isServiceWorked("com.tianheng.client.service.SerialPortService")){
-            startApp();
-        }
+
+//        if (!isServiceWorked("com.tianheng.client.service.SerialPortService")){
+//            startApp();
+//        }
 
     }
 
