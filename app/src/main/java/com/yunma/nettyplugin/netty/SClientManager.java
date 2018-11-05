@@ -133,23 +133,7 @@ public class SClientManager {
             Log.e(TAG, "frame sent failed, channel is null, is the manager start?");
             return false;
         }
-        lastWriteFuture = channel.writeAndFlush(frame);
-        lastWriteFuture.addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture future) throws Exception {
-                Log.d(TAG, "netty send :" + future.isSuccess());
-                if (!future.isSuccess()) {
-                    final EventLoop loop = future.channel().eventLoop();
-                    loop.schedule(new Runnable() {
-                        @Override
-                        public void run() {
-                            start(Const.BASE_IP, Const.BASE_PORT);
-                        }
-                    }, 3, TimeUnit.SECONDS);
-                }
-
-            }
-        });
+        channel.writeAndFlush(frame);
         Log.d(TAG, frame);
         return true;
     }
@@ -177,7 +161,7 @@ public class SClientManager {
                     public void run() {
                         start(Const.BASE_IP, Const.BASE_PORT);
                     }
-                }, 3, TimeUnit.SECONDS);
+                }, 1, TimeUnit.SECONDS);
             }
         }
 

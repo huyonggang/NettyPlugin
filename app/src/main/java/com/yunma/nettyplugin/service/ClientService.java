@@ -46,7 +46,7 @@ public class ClientService extends Service {
             EventBus.getDefault().register(this);
         }
         SClientManager.getInstance().start(Const.BASE_IP, Const.BASE_PORT);
-        initDispose();
+        //initDispose();
     }
 
     private void initDispose() {

@@ -27,10 +27,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initData();
-//        Intent intent = new Intent();
-//        intent.setAction("com.yunma.start");
-//        sendBroadcast(intent);
-        //initDispose();
+        Intent intent = new Intent();
+        intent.setAction("com.yunma.start");
+        sendBroadcast(intent);
+        initDispose();
     }
 
     private void initData() {
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initDispose() {
         intent.setAction("com.yunma.netty");
-        Disposable disposable = Observable.interval(20, 4, TimeUnit.SECONDS)
+        Disposable disposable = Observable.interval(20, 10, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Long>() {

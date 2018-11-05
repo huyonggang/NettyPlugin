@@ -7,8 +7,11 @@ import com.yunma.nettyplugin.bean.PingBean;
 import com.yunma.nettyplugin.global.Const;
 import com.yunma.nettyplugin.util.Util;
 
+import java.util.concurrent.TimeUnit;
+
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.EventLoop;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
@@ -57,5 +60,19 @@ public class DecoderHandler extends SimpleChannelInboundHandler<Object> {
             }
 
         }
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
+        System.err.println("掉线了...");
+        //使用过程中断线重连
+        final EventLoop eventLoop = ctx.channel().eventLoop();
+        eventLoop.schedule(new Runnable() {
+            @Override
+            public void run() {
+                SClientManager.getInstance().start(Const.BASE_IP, Const.BASE_PORT);
+            }
+        }, 1L, TimeUnit.SECONDS);
     }
 }
