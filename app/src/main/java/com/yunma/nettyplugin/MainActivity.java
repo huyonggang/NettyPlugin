@@ -26,11 +26,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initData();
-        Intent intent = new Intent();
-        intent.setAction("com.yunma.start");
-        sendBroadcast(intent);
-        initDispose();
+//        initData();
+//        Intent intent = new Intent();
+//        intent.setAction("com.yunma.start");
+//        sendBroadcast(intent);
+//        initDispose();
     }
 
     private void initData() {
