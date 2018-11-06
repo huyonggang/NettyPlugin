@@ -31,6 +31,7 @@ import io.reactivex.schedulers.Schedulers;
 public class ClientService extends Service {
 
     private boolean isAppRunning = false;
+    private long sendTime = 0;
 
     @Nullable
     @Override
@@ -46,17 +47,19 @@ public class ClientService extends Service {
             EventBus.getDefault().register(this);
         }
         SClientManager.getInstance().start(Const.BASE_IP, Const.BASE_PORT);
-        //initDispose();
+        initDispose();
     }
 
     private void initDispose() {
-        Disposable disposable = Observable.interval(4, 4, TimeUnit.SECONDS)
+        Disposable disposable = Observable.interval(5 * 60, 10 * 60, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
-                        isBackground();
+                        if (System.currentTimeMillis() - sendTime > 1000 * 60 * 10){
+                            startApp();
+                        }
                     }
                 });
     }
@@ -64,6 +67,7 @@ public class ClientService extends Service {
 
     @Subscribe
     public void onEvent(String data) {
+        sendTime = System.currentTimeMillis();
         SClientManager.getInstance().sendFrame(data + "\n");
     }
 
