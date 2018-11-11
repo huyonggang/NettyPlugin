@@ -31,6 +31,7 @@ import io.reactivex.schedulers.Schedulers;
 public class ClientService extends Service {
 
     private boolean isAppRunning = false;
+    private long sendTime = 0;
 
     @Nullable
     @Override
@@ -46,17 +47,23 @@ public class ClientService extends Service {
             EventBus.getDefault().register(this);
         }
         SClientManager.getInstance().start(Const.BASE_IP, Const.BASE_PORT);
-        //initDispose();
+        initDispose();
     }
 
     private void initDispose() {
-        Disposable disposable = Observable.interval(4, 4, TimeUnit.SECONDS)
+        Disposable disposable = Observable.interval(0, 10 * 60, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
-                        isBackground();
+                        if (!isBackground()) {
+                            startApp();
+                            return;
+                        }
+                        if (System.currentTimeMillis() - sendTime > 1000 * 60 * 10) {
+                            startApp();
+                        }
                     }
                 });
     }
@@ -64,11 +71,12 @@ public class ClientService extends Service {
 
     @Subscribe
     public void onEvent(String data) {
+        sendTime = System.currentTimeMillis();
         SClientManager.getInstance().sendFrame(data + "\n");
     }
 
 
-    public void isBackground() {
+    public boolean isBackground() {
         ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(100);
         for (ActivityManager.RunningTaskInfo info : list) {
@@ -83,15 +91,7 @@ public class ClientService extends Service {
         }
 
         Log.d("ClientService", "status--->" + isAppRunning);
-
-        //匹配成功
-        if (!isAppRunning) {
-            startApp();
-        }
-
-//        if (!isServiceWorked("com.tianheng.client.service.SerialPortService")){
-//            startApp();
-//        }
+        return isAppRunning;
 
     }
 
@@ -102,19 +102,6 @@ public class ClientService extends Service {
         launchIntent.setFlags(
                 Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
         startActivity(launchIntent);
-    }
-
-
-    //检测service是否在运行
-    public boolean isServiceWorked(String serviceName) {
-        ActivityManager myManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        ArrayList<ActivityManager.RunningServiceInfo> runningService = (ArrayList<ActivityManager.RunningServiceInfo>) myManager.getRunningServices(Integer.MAX_VALUE);
-        for (int i = 0; i < runningService.size(); i++) {
-            if (runningService.get(i).service.getClassName().toString().equals(serviceName)) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }

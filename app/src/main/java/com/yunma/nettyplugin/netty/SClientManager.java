@@ -124,7 +124,7 @@ public class SClientManager {
     }
 
 
-    public boolean sendFrame(String frame) {
+    public boolean sendFrame(final String frame) {
         if (frame == null) {
             Log.e(TAG, "frame sent failed, it can not be null");
             return false;
@@ -133,8 +133,13 @@ public class SClientManager {
             Log.e(TAG, "frame sent failed, channel is null, is the manager start?");
             return false;
         }
-        channel.writeAndFlush(frame);
-        Log.d(TAG, frame);
+        ChannelFuture channelFuture = channel.writeAndFlush(frame);
+        channelFuture.addListeners(new ChannelFutureListener() {
+            @Override
+            public void operationComplete(ChannelFuture channelFuture) throws Exception {
+                Log.d(TAG, channelFuture.isSuccess()+"      "+frame);
+            }
+        });
         return true;
     }
 
