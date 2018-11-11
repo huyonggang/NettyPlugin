@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.yunma.nettyplugin.bean.PingBean;
+import com.yunma.nettyplugin.service.ClientService;
 import com.yunma.nettyplugin.util.Util;
 
 import java.util.concurrent.TimeUnit;
@@ -28,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 //        initData();
 //        Intent intent = new Intent();
-        intent.setAction("com.yunma.start");
-        sendBroadcast(intent);
+        Intent service = new Intent(this, ClientService.class);
+        startService(service);
 //        initDispose();
     }
 
