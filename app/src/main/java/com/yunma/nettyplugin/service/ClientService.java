@@ -51,7 +51,7 @@ public class ClientService extends Service {
     }
 
     private void initDispose() {
-        Disposable disposable = Observable.interval(0, 10 * 60, TimeUnit.SECONDS)
+        Disposable disposable = Observable.interval(2*60, 10 * 60, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Long>() {
