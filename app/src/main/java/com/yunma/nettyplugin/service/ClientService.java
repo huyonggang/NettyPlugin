@@ -51,13 +51,17 @@ public class ClientService extends Service {
     }
 
     private void initDispose() {
-        Disposable disposable = Observable.interval(5 * 60, 10 * 60, TimeUnit.SECONDS)
+        Disposable disposable = Observable.interval(0, 10 * 60, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
-                        if (System.currentTimeMillis() - sendTime > 1000 * 60 * 10){
+                        if (!isBackground()) {
+                            startApp();
+                            return;
+                        }
+                        if (System.currentTimeMillis() - sendTime > 1000 * 60 * 10) {
                             startApp();
                         }
                     }
@@ -72,7 +76,7 @@ public class ClientService extends Service {
     }
 
 
-    public void isBackground() {
+    public boolean isBackground() {
         ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(100);
         for (ActivityManager.RunningTaskInfo info : list) {
@@ -87,15 +91,7 @@ public class ClientService extends Service {
         }
 
         Log.d("ClientService", "status--->" + isAppRunning);
-
-        //匹配成功
-        if (!isAppRunning) {
-            startApp();
-        }
-
-//        if (!isServiceWorked("com.tianheng.client.service.SerialPortService")){
-//            startApp();
-//        }
+        return isAppRunning;
 
     }
 
@@ -106,19 +102,6 @@ public class ClientService extends Service {
         launchIntent.setFlags(
                 Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
         startActivity(launchIntent);
-    }
-
-
-    //检测service是否在运行
-    public boolean isServiceWorked(String serviceName) {
-        ActivityManager myManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        ArrayList<ActivityManager.RunningServiceInfo> runningService = (ArrayList<ActivityManager.RunningServiceInfo>) myManager.getRunningServices(Integer.MAX_VALUE);
-        for (int i = 0; i < runningService.size(); i++) {
-            if (runningService.get(i).service.getClassName().toString().equals(serviceName)) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }
