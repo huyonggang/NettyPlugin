@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.ScrollView;
 
 import com.yunma.nettyplugin.global.Const;
 import com.yunma.nettyplugin.netty.SClientManager;
+import com.yunma.nettyplugin.receiver.CompleteReceiver;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -48,6 +50,9 @@ public class ClientService extends Service {
         }
         SClientManager.getInstance().start(Const.BASE_IP, Const.BASE_PORT);
         initDispose();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_TIME_TICK);
+        registerReceiver(new CompleteReceiver(),filter);
     }
 
     private void initDispose() {
