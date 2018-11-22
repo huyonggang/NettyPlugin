@@ -54,17 +54,14 @@ public class CompleteReceiver extends BroadcastReceiver {
         long systemTime = System.currentTimeMillis();
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 14);
+        calendar.set(Calendar.HOUR_OF_DAY, 15);
         calendar.set(Calendar.MINUTE, 10);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         long selectTime = calendar.getTimeInMillis();
         /**如果超过今天的3点，那么定时器就设置为明天3点*/
-//        if (systemTime > selectTime) {
-//            calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + 1);
-//        }
         if (systemTime > selectTime) {
-            calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE) + 10);
+            calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + 1);
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String selectStr = sdf.format(new Date(calendar.getTimeInMillis()));
