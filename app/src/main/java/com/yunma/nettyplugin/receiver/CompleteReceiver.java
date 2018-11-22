@@ -36,7 +36,7 @@ public class CompleteReceiver extends BroadcastReceiver {
                 start3Clock(context);
                 break;
             case ACTION_THREE_CLOCK_REBOOT:
-                reboot();
+                reboot(context);
                 break;
             case ACTION_BOOT_COMPLETE:
                 Intent service = new Intent(context, ClientService.class);
@@ -58,11 +58,11 @@ public class CompleteReceiver extends BroadcastReceiver {
         mg.setRepeating(AlarmManager.RTC, selectTime, AlarmManager.INTERVAL_DAY, p);
     }
 
-    public static void reboot() {
-        try {
-            Log.i(TAG, "reboot");
-            Runtime.getRuntime().exec("am start -a android.intent.action.REBOOT");
-        } catch (Exception e) {
-        }
+    public static void reboot(Context context) {
+        Intent intent=new Intent(Intent.ACTION_REBOOT);
+        intent.putExtra("nowait", 1);
+        intent.putExtra("interval", 1);
+        intent.putExtra("window", 0);
+        context.sendBroadcast(intent);
     }
 }
