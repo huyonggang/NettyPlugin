@@ -50,24 +50,12 @@ public class CompleteReceiver extends BroadcastReceiver {
         AlarmManager mg = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent mFifteenIntent = new Intent(ACTION_THREE_CLOCK_REBOOT);
         PendingIntent p = PendingIntent.getBroadcast(context,
-                0, mFifteenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        long systemTime = System.currentTimeMillis();
+                0, mFifteenIntent, 0);
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 15);
-        calendar.set(Calendar.MINUTE, 10);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 16);
+        calendar.set(Calendar.MINUTE, 40);
         long selectTime = calendar.getTimeInMillis();
-        /**如果超过今天的3点，那么定时器就设置为明天3点*/
-        if (systemTime > selectTime) {
-            calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE) + 1);
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String selectStr = sdf.format(new Date(calendar.getTimeInMillis()));
-        long clockTime = SystemClock.elapsedRealtime();
-        /**RTC_SHUTDOWN_WAKEUP 使用标识，系统进入深度休眠还唤醒*/
-        mg.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, selectTime, AlarmManager.INTERVAL_DAY, p);
+        mg.setRepeating(AlarmManager.RTC, selectTime, AlarmManager.INTERVAL_DAY, p);
     }
 
     public static void reboot() {

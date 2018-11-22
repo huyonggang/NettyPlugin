@@ -38,7 +38,7 @@
             android:name=".receiver.CompleteReceiver"
             android:enabled="true"
             android:exported="true">
-            <intent-filter android:priority="1000">
+            <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
                 <action android:name="ACTION_THREE_CLOCK_REBOOT"></action>
             </intent-filter>
